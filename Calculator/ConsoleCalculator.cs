@@ -9,8 +9,6 @@ namespace Calculator
     class ConsoleCalculator
     {
         double? previousResult = null;
-        int MaxOperationCount = 1;
-        int MaxArgumentsCount = 2;
         string[] operations = new string[] { "-", "+", "/", "*" };
 
 
