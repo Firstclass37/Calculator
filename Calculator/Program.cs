@@ -3,32 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
+
 
 namespace Calculator
 {
     class Program
     {
+
         static void Main(string[] args)
         {
-            Calculator calculator = new Calculator();
-            string inputString = String.Empty;
-            while ((inputString = Console.ReadLine()) != null)
+            ConsoleCalculator calculator = new ConsoleCalculator();
+
+            string expressionString = string.Empty;
+
+            while ((expressionString = Console.ReadLine()) != null)
             {
-                int result = 0;
-                string[] stringArg = inputString.Split(new Char[] { '-', '+', '/', '*' });
-                int arg1 = 0;
-                int arg2 = 0;
-                if (int.TryParse(stringArg[0], out arg1) && int.TryParse(stringArg[1], out arg2))
+                if (CheckCommand(expressionString)) continue;
+                double result = 0;
+                if (calculator.TryCalculate(expressionString, out result))
                 {
-                    if (inputString.Contains("-")) { Console.WriteLine("Result: " + calculator.Sub(arg1, arg2).ToString()); continue; }
-                    if (inputString.Contains("+")) { Console.WriteLine("Result: " + calculator.Sum(arg1, arg2).ToString()); continue; }
-                    if (inputString.Contains("/")) { Console.WriteLine("Result: " + calculator.Dev(arg1, arg2).ToString()); continue; }
-                    if (inputString.Contains("*")) { Console.WriteLine("Result: " + calculator.Mul(arg1, arg2).ToString()); continue; }                   
+                    Console.WriteLine("Result: {0}", result);
                 }
-                else Console.WriteLine("Неккоректный ввод! Попробуйте снова!)");
+                else
+                {
+                    Console.WriteLine("Error!!! try again");
+                }
 
             }
         }
 
+        private static bool CheckCommand(string inputString)
+        {
+            if (inputString == "-c") { Console.Clear(); return true; }
+            return false;
+        }
+
+     
     }
 }
