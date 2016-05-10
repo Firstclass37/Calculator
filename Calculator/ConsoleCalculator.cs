@@ -10,7 +10,7 @@ namespace Calculator
     {
         public string ErrorMessage { get; set; }
         double? previousResult = null;
-        string[] operations = new string[] { "-", "+", "/", "*" ,"!"};
+        string[] operations = new string[] { "-", "+", "/", "*" ,"!","^"};
 
 
         public bool TryCalculate(string inputString, out double result)
@@ -79,20 +79,20 @@ namespace Calculator
 
         private double MulDiv(string expressionString, ref int index)
         {
-            double result = Fact(expressionString, ref index);
+            double result = Sqr(expressionString, ref index);
 
             while (index < expressionString.Length - 1)
             {
                 if (expressionString[index] == '*')
                 {
                     index++;
-                    result *= Fact(expressionString, ref index);
+                    result *= Sqr(expressionString, ref index);
                     break;
                 }
                 else if (expressionString[index] == '/')
                 {
                     index++;
-                    result /= Fact(expressionString, ref index);
+                    result /= Sqr(expressionString, ref index);
                     break;
                 }
                 else break;
@@ -119,6 +119,18 @@ namespace Calculator
             }
             return number;
         }
+       
+        private double Sqr(string expressionString, ref int index)
+        {
+            double number = Fact(expressionString,ref index);
+
+            if (index < expressionString.Length && expressionString[index] == '^')
+            {
+                index++;
+                number = Math.Pow(number, Fact(expressionString, ref index));
+            }
+            return number;
+        }
 
         private double GetNumber(string expressionString, ref int index)
         {
@@ -136,6 +148,7 @@ namespace Calculator
 
         }
 
+
         private int GetRightBraketIndex(string expressionString, int leftBraketIndex)
         {
             for (int i = leftBraketIndex; i < expressionString.Length; i++)
@@ -145,7 +158,6 @@ namespace Calculator
             return 0;
                 
         }
-
 
 
         private bool CheckBrackets(string inputString)
