@@ -8,82 +8,176 @@ namespace Calculator
 {
     class ConsoleCalculator
     {
+        public string ErrorMessage { get; set; }
         double? previousResult = null;
         string[] operations = new string[] { "-", "+", "/", "*" };
 
 
-        public bool TryCalculate(string inputString,out double result)
+        public bool TryCalculate(string inputString, out double result)
         {
-            bool isCalculated = false;
+            string expressionString = inputString;
             result = 0;
+            if ( !CheckBrackets(expressionString) || CheckUnacceptableSymbols(expressionString) || !CheckEexpressionСorrectness(expressionString)) return false;
+            result = Calculate(inputString);
+            previousResult = result;
+            return true;
 
-            if (CheckOperations(inputString) != String.Empty && CheckArgumentsCount(inputString) == 1 && previousResult != null)
+        }
+
+        private double Calculate(string expressionString)
+        {
+            string modifiedExpressionString = string.Copy(expressionString);
+            if (operations.Contains(expressionString[0].ToString())) modifiedExpressionString = previousResult.ToString() + expressionString;
+          
+            string expressionWoBrackets = CulculateBrackets(modifiedExpressionString);
+            modifiedExpressionString = CalculeteSmallExpression(expressionWoBrackets);
+           
+            return  double.Parse(modifiedExpressionString);
+
+        }
+        private string CulculateBrackets(string expressionString)
+        {
+            string result = string.Copy(expressionString);
+            while (result.Contains("("))
             {
-                double arg = 0;
-                string[] argumets = inputString.Split(operations, StringSplitOptions.RemoveEmptyEntries);
-                if (double.TryParse(argumets[0], out arg))
-                {
-                    result = Calculate(previousResult.Value, arg, CheckOperations(inputString));
-                    previousResult = result;
-                    isCalculated = true;
-                }    
+
+                int leftBrecketPos = result.LastIndexOf("(");
+                int rightBracketPos = result.IndexOf(")");
+                string smallExpression = result.Substring(leftBrecketPos,rightBracketPos - leftBrecketPos+1);//todo edit
+                string smallResult = CalculeteSmallExpression(smallExpression.Remove(0,1).Remove(smallExpression.Length-2, 1));
+                result = result.Replace(smallExpression,smallResult);
             }
+            return result;
 
-            if (CheckOperations(inputString) != String.Empty && CheckArgumentsCount(inputString) == 2)
+        }
+
+        private string CalculeteSmallExpression(string expressionString)
+        {
+            int index = 0;
+            double result = MulDiv(expressionString,ref index);
+
+            while (index < expressionString.Length-1)
             {
-                double arg1 = 0;
-                double arg2 = 0;
-                string[] argumets = inputString.Split(operations, StringSplitOptions.RemoveEmptyEntries);
-                if (double.TryParse(argumets[0], out arg1) && double.TryParse(argumets[1], out arg2))
+                if (expressionString[index] == '+')
                 {
-                    result = Calculate(arg1, arg2, CheckOperations(inputString));
-                    previousResult = result;
-                    isCalculated = true;
+                    index++;
+                    result += MulDiv(expressionString, ref index);
+                    break;
+                }
+                if (expressionString[index] == '-')
+                {
+                    index++;
+                    result -= MulDiv(expressionString, ref index);
+                    break;
                 }
 
             }
 
-            return isCalculated;
-
+            return result.ToString();
         }
 
-        private double Calculate(double arg1, double arg2, string operation)
+        private double MulDiv(string expressionString, ref int index)
         {
-            double result = 0;
+            double result = GetNumber(expressionString, ref index);
 
-            switch (operation)
+            while (index < expressionString.Length - 1)
             {
-                case "-": result = arg1 - arg2;break;
-                case "+": result = arg1 + arg2; break;
-                case "*": result = arg1 * arg2; break;
-                case "/": result = arg1 / arg2; break;
+                if (expressionString[index] == '*')
+                {
+                    index++;
+                    result *= GetNumber(expressionString, ref index);
+                    break;
+                }
+                else if (expressionString[index] == '/')
+                {
+                    index++;
+                    result /= GetNumber(expressionString, ref index);
+                    break;
+                }
+                else break;
+                
+
             }
-
             return result;
+
         }
 
-        private int CheckArgumentsCount(string inputString)
+        private double GetNumber(string expressionString, ref int index)
         {
-            string[] argumentsString = inputString.Split(operations,StringSplitOptions.RemoveEmptyEntries);
-            return argumentsString.Count();
+            string result = string.Empty;
+            foreach (char c in expressionString.Substring(index))
+            {
+                if (char.IsDigit(c) || char.IsSeparator(c))
+                {
+                    result += c.ToString();
+                    index++;
+                }
+                else break;
+            }
+            return double.Parse(result);
+
         }
 
-        private string CheckOperations(string inputString)
+
+
+
+
+        private bool CheckBrackets(string inputString)
         {
-            int currentOperationsCount = 0;
-            string operation = String.Empty;
+            int leftBracketsCount = 0;
+            int rightBracketsCount = 0;
 
             for (int i = 0; i < inputString.Length; i++)
             {
-                if (operations.Contains(inputString[i].ToString()))
-                {
-                    currentOperationsCount++;
-                    operation = inputString[i].ToString();
-                }       
+                if (inputString[i] == '(') leftBracketsCount++;
+                if (inputString[i] == ')') rightBracketsCount++;
             }
 
-            if (currentOperationsCount == 1) return operation;
-            else return string.Empty;           
+            if (leftBracketsCount == rightBracketsCount) return true;
+            else
+            {
+                ErrorMessage = "BracketsError";
+                return false;
+            }
         }
+
+        private bool CheckUnacceptableSymbols(string inputString)
+        {
+            string unacceptableSymbols = "qwertyuiop[]';lkjhgfdsazxcvbnm?=_%$#!'&йцукенгшщзхждлорпавыфячсмитьбю№";
+
+            for (int i = 0; i < inputString.Length; i++)
+            {
+                if (unacceptableSymbols.Contains(inputString[i].ToString().ToLower()))
+                {
+                    ErrorMessage = "UnacceptableSymbols";
+                    return true;
+                }                
+            }
+            return false;
+        }
+
+        private bool CheckEexpressionСorrectness(string inputString)
+        {
+            
+            if (previousResult == null && operations.Contains(inputString[0].ToString())) { ErrorMessage = "IncorrectInput"; return false;  }
+
+            for (int i = 0;i< inputString.Length; i++)
+            {
+                if (operations.Contains(inputString[i].ToString()) && operations.Contains(inputString[i + 1].ToString())) { ErrorMessage = "IncorrectInput"; return false; }       
+            }
+
+            return true;
+        }
+
+        private bool HaveOperations(string inputString)
+        {
+            for (int i = 0; i < inputString.Length; i++)
+            {
+                if (operations.Contains(inputString[i].ToString())) return true;
+
+            }
+            return false;
+        }
+      
     }
 }

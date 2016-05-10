@@ -27,7 +27,7 @@ namespace Calculator
                 }
                 else
                 {
-                    Console.WriteLine("Error!!! try again");
+                    Console.WriteLine(calculator.ErrorMessage);
                 }
 
             }
