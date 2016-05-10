@@ -35,6 +35,7 @@ namespace Calculator
             return  double.Parse(modifiedExpressionString);
 
         }
+
         private string CulculateBrackets(string expressionString)
         {
             string result = string.Copy(expressionString);
@@ -43,7 +44,7 @@ namespace Calculator
 
                 int leftBrecketPos = result.LastIndexOf("(");
                 int rightBracketPos = result.IndexOf(")");
-                string smallExpression = result.Substring(leftBrecketPos,rightBracketPos - leftBrecketPos+1);//todo edit
+                string smallExpression = result.Substring(leftBrecketPos,rightBracketPos - leftBrecketPos+1);
                 string smallResult = CalculeteSmallExpression(smallExpression.Remove(0,1).Remove(smallExpression.Length-2, 1));
                 result = result.Replace(smallExpression,smallResult);
             }
@@ -78,20 +79,20 @@ namespace Calculator
 
         private double MulDiv(string expressionString, ref int index)
         {
-            double result = GetNumber(expressionString, ref index);
+            double result = Fact(expressionString, ref index);
 
             while (index < expressionString.Length - 1)
             {
                 if (expressionString[index] == '*')
                 {
                     index++;
-                    result *= GetNumber(expressionString, ref index);
+                    result *= Fact(expressionString, ref index);
                     break;
                 }
                 else if (expressionString[index] == '/')
                 {
                     index++;
-                    result /= GetNumber(expressionString, ref index);
+                    result /= Fact(expressionString, ref index);
                     break;
                 }
                 else break;
@@ -100,6 +101,23 @@ namespace Calculator
             }
             return result;
 
+        }
+
+        private double Fact(string expressionString, ref int index)
+        {
+            double number = GetNumber(expressionString, ref index); //todo if number is double - ?????
+            double result = 1;
+            if (expressionString[index] == '!')
+            {
+                int i = 1;
+                while (i <= number)
+                {
+                    result *= i;
+                    i++;
+                }
+                return result;
+            }
+            return number;
         }
 
         private double GetNumber(string expressionString, ref int index)
@@ -143,12 +161,27 @@ namespace Calculator
 
         private bool CheckUnacceptableSymbols(string inputString)
         {
-            string unacceptableSymbols = "qwertyuiop[]';lkjhgfdsazxcvbnm?=_%$#!'&йцукенгшщзхждлорпавыфячсмитьбю№";
+            string unacceptableSymbols = "qwertyuiop[]';lkjhgfdsazxcvbnm?=_%$#'&йцукенгшщзхждлорпавыфячсмитьбю№";
 
             for (int i = 0; i < inputString.Length; i++)
             {
                 if (unacceptableSymbols.Contains(inputString[i].ToString().ToLower()))
                 {
+                    if (inputString[i] == 'c' && inputString[i + 1] == 'o' && inputString[i + 2] == 's')
+                    {
+                        i += 3;
+                        continue;
+                    }
+                    if (inputString[i] == 's' && inputString[i + 1] == 'i' && inputString[i + 2] == 'n')
+                    {
+                        i += 3;
+                        continue;
+                    }
+                    if (inputString[i] == 't' && inputString[i + 1] == 'g')
+                    {
+                        i += 2;
+                        continue;
+                    }
                     ErrorMessage = "UnacceptableSymbols";
                     return true;
                 }                
@@ -167,16 +200,6 @@ namespace Calculator
             }
 
             return true;
-        }
-
-        private bool HaveOperations(string inputString)
-        {
-            for (int i = 0; i < inputString.Length; i++)
-            {
-                if (operations.Contains(inputString[i].ToString())) return true;
-
-            }
-            return false;
         }
       
     }
