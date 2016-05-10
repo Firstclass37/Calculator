@@ -15,10 +15,10 @@ namespace Calculator
 
         public bool TryCalculate(string inputString, out double result)
         {
-            string expressionString = inputString;
+            string expressionString = inputString.Replace(".",",");
             result = 0;
             if ( !CheckBrackets(expressionString) || CheckUnacceptableSymbols(expressionString) || !CheckEexpressionСorrectness(expressionString)) return false;
-            result = Calculate(inputString);
+            result = Calculate(expressionString);
             previousResult = result;
             return true;
 
@@ -137,7 +137,7 @@ namespace Calculator
             string result = string.Empty;
             foreach (char c in expressionString.Substring(index))
             {
-                if (char.IsDigit(c) || char.IsSeparator(c))
+                if (char.IsDigit(c) || c==',')
                 {
                     result += c.ToString();
                     index++;
