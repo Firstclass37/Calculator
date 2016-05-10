@@ -10,7 +10,7 @@ namespace Calculator
     {
         public string ErrorMessage { get; set; }
         double? previousResult = null;
-        string[] operations = new string[] { "-", "+", "/", "*" };
+        string[] operations = new string[] { "-", "+", "/", "*" ,"!"};
 
 
         public bool TryCalculate(string inputString, out double result)
@@ -202,7 +202,7 @@ namespace Calculator
             
             if (previousResult == null && operations.Contains(inputString[0].ToString())) { ErrorMessage = "IncorrectInput"; return false;  }
 
-            for (int i = 0;i< inputString.Length; i++)
+            for (int i = 0;i< inputString.Length-1; i++)
             {
                 if (operations.Contains(inputString[i].ToString()) && operations.Contains(inputString[i + 1].ToString())) { ErrorMessage = "IncorrectInput"; return false; }       
             }
