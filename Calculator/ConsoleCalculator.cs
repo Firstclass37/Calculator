@@ -43,7 +43,7 @@ namespace Calculator
             {
 
                 int leftBrecketPos = result.LastIndexOf("(");
-                int rightBracketPos = result.IndexOf(")");
+                int rightBracketPos = GetRightBraketIndex(result,leftBrecketPos);
                 string smallExpression = result.Substring(leftBrecketPos,rightBracketPos - leftBrecketPos+1);
                 string smallResult = CalculeteSmallExpression(smallExpression.Remove(0,1).Remove(smallExpression.Length-2, 1));
                 result = result.Replace(smallExpression,smallResult);
@@ -107,7 +107,7 @@ namespace Calculator
         {
             double number = GetNumber(expressionString, ref index); //todo if number is double - ?????
             double result = 1;
-            if (expressionString[index] == '!')
+            if (index < expressionString.Length && expressionString[index] == '!')
             {
                 int i = 1;
                 while (i <= number)
@@ -136,7 +136,15 @@ namespace Calculator
 
         }
 
-
+        private int GetRightBraketIndex(string expressionString, int leftBraketIndex)
+        {
+            for (int i = leftBraketIndex; i < expressionString.Length; i++)
+            {
+                if (expressionString[i] == ')') return i;
+            }
+            return 0;
+                
+        }
 
 
 
