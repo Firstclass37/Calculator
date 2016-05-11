@@ -15,7 +15,7 @@ namespace Calculator
 
         public bool TryCalculate(string inputString, out double result)
         {
-            string expressionString = inputString.Replace(".",",");
+            string expressionString = inputString.Replace(".", ",").Replace("PI",Math.PI.ToString()).ToLower();
             result = 0;
             if ( !CheckBrackets(expressionString) || CheckUnacceptableSymbols(expressionString) || !CheckEexpressionСorrectness(expressionString)) return false;
             result = Calculate(expressionString);
@@ -29,8 +29,9 @@ namespace Calculator
             string modifiedExpressionString = string.Copy(expressionString);
             if (operations.Contains(expressionString[0].ToString())) modifiedExpressionString = previousResult.ToString() + expressionString;
           
-            string expressionWoBrackets = CulculateBrackets(modifiedExpressionString);
-            modifiedExpressionString = CalculeteSmallExpression(expressionWoBrackets);
+            modifiedExpressionString = CulculateBrackets(modifiedExpressionString);
+            if (expressionString.Contains("sin")) modifiedExpressionString = CulculateSin(modifiedExpressionString);
+            modifiedExpressionString = CalculeteSmallExpression(modifiedExpressionString);
            
             return  double.Parse(modifiedExpressionString);
 
@@ -149,6 +150,29 @@ namespace Calculator
         }
 
 
+        private string CulculateSin(string expressionString)
+        {
+            string resultStringWoSin = String.Copy(expressionString);
+
+            while (resultStringWoSin.Contains("sin"))
+            {
+                int index = expressionString.IndexOf("s") + 3;
+                double value = GetNumber(expressionString, ref index);
+                double result = Math.Sin(value*Math.PI/180);
+                resultStringWoSin = resultStringWoSin.Replace("sin"+value.ToString(),result.ToString());
+            }
+            return resultStringWoSin;
+
+        }
+        private void CulculateCos(string expressionString)
+        {
+
+        }
+        private void CulculateTg(string expressionString)
+        {
+
+        }
+
         private int GetRightBraketIndex(string expressionString, int leftBraketIndex)
         {
             for (int i = leftBraketIndex; i < expressionString.Length; i++)
@@ -181,7 +205,7 @@ namespace Calculator
 
         private bool CheckUnacceptableSymbols(string inputString)
         {
-            string unacceptableSymbols = "qwertyuiop[]';lkjhgfdsazxcvbnm?=_%$#'&йцукенгшщзхждлорпавыфячсмитьбю№";
+            string unacceptableSymbols = "qwertyuiop[]';lkjhgfdsazxcvbm?=_%$#'&йцукенгшщзхждлорпавыфячсмитьбю№";
 
             for (int i = 0; i < inputString.Length; i++)
             {
