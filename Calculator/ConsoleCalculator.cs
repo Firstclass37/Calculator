@@ -15,7 +15,7 @@ namespace Calculator
 
         public bool TryCalculate(string inputString, out double result)
         {
-            string expressionString = inputString.Replace(".", ",").ToLower().Replace("pi",Math.PI.ToString());
+            string expressionString = inputString.Replace(".", ",").ToLower().Replace("pi",Math.PI.ToString()).Replace(" ",String.Empty);
             result = 0;
             if ( !CheckBrackets(expressionString) || CheckUnacceptableSymbols(expressionString) || !CheckEexpressionСorrectness(expressionString)) return false;
             result = Calculate(expressionString);
