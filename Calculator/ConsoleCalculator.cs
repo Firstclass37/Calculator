@@ -31,6 +31,8 @@ namespace Calculator
           
             modifiedExpressionString = CulculateBrackets(modifiedExpressionString);
             if (expressionString.Contains("sin")) modifiedExpressionString = CulculateSin(modifiedExpressionString);
+            if (expressionString.Contains("cos")) modifiedExpressionString = CulculateCos(modifiedExpressionString);
+            if (expressionString.Contains("tg")) modifiedExpressionString = CulculateTg(modifiedExpressionString);
             modifiedExpressionString = CalculeteSmallExpression(modifiedExpressionString);
            
             return  double.Parse(modifiedExpressionString);
@@ -42,7 +44,6 @@ namespace Calculator
             string result = string.Copy(expressionString);
             while (result.Contains("("))
             {
-
                 int leftBrecketPos = result.LastIndexOf("(");
                 int rightBracketPos = GetRightBraketIndex(result,leftBrecketPos);
                 string smallExpression = result.Substring(leftBrecketPos,rightBracketPos - leftBrecketPos+1);
@@ -164,13 +165,32 @@ namespace Calculator
             return resultStringWoSin;
 
         }
-        private void CulculateCos(string expressionString)
+        private string CulculateCos(string expressionString)
         {
+            string resultStringWoSin = String.Copy(expressionString);
+
+            while (resultStringWoSin.Contains("cos"))
+            {
+                int index = expressionString.IndexOf("c") + 3;
+                double value = GetNumber(expressionString, ref index);
+                double result = Math.Cos(value * Math.PI / 180);
+                resultStringWoSin = resultStringWoSin.Replace("cos" + value.ToString(), result.ToString());
+            }
+            return resultStringWoSin;
 
         }
-        private void CulculateTg(string expressionString)
+        private string CulculateTg(string expressionString)
         {
+            string resultStringWoSin = String.Copy(expressionString);
 
+            while (resultStringWoSin.Contains("tg"))
+            {
+                int index = expressionString.IndexOf("t") + 2;
+                double value = GetNumber(expressionString, ref index);
+                double result = Math.Tan(value * Math.PI / 180);
+                resultStringWoSin = resultStringWoSin.Replace("tg" + value.ToString(), result.ToString());
+            }
+            return resultStringWoSin;
         }
 
         private int GetRightBraketIndex(string expressionString, int leftBraketIndex)

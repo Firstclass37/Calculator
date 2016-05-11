@@ -16,6 +16,7 @@ namespace Calculator
             ConsoleCalculator calculator = new ConsoleCalculator();
 
             string expressionString = string.Empty;
+            ShowHelp();
 
             while ((expressionString = Console.ReadLine()) != null)
             {
@@ -35,8 +36,16 @@ namespace Calculator
 
         private static  bool CheckCommand(string inputString)
         {
-            if (inputString == "-c") { Console.Clear(); return true; }
+            if (inputString == "-c") { Console.Clear();ShowHelp(); return true; }
             return false;
+        }
+
+        private static void ShowHelp()
+        {
+            Console.WriteLine(@"
+Operations: PI - + / * ^ ! sin(<Value>) cos(<Value>) tg(<value>)           
+                               ");
+
         }
 
      
