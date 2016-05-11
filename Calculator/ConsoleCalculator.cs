@@ -30,9 +30,11 @@ namespace Calculator
             if (operations.Contains(expressionString[0].ToString())) modifiedExpressionString = previousResult.ToString() + expressionString;
           
             modifiedExpressionString = CulculateBrackets(modifiedExpressionString);
-            if (expressionString.Contains("sin")) modifiedExpressionString = CulculateSin(modifiedExpressionString);
-            if (expressionString.Contains("cos")) modifiedExpressionString = CulculateCos(modifiedExpressionString);
-            if (expressionString.Contains("tg")) modifiedExpressionString = CulculateTg(modifiedExpressionString);
+            if (expressionString.Contains("sin")) modifiedExpressionString = CalculateSin(modifiedExpressionString);
+            if (expressionString.Contains("cos")) modifiedExpressionString = CalculateCos(modifiedExpressionString);
+            if (expressionString.Contains("tg")) modifiedExpressionString = CalculateTg(modifiedExpressionString);
+            if (expressionString.Contains("lg")) modifiedExpressionString = CalculateLg(modifiedExpressionString);
+            if (expressionString.Contains("ln")) modifiedExpressionString = CalculateLn(modifiedExpressionString);
             modifiedExpressionString = CalculeteSmallExpression(modifiedExpressionString);
            
             return  double.Parse(modifiedExpressionString);
@@ -78,7 +80,6 @@ namespace Calculator
 
             return result.ToString();
         }
-
         private double MulDiv(string expressionString, ref int index)
         {
             double result = Sqr(expressionString, ref index);
@@ -104,7 +105,6 @@ namespace Calculator
             return result;
 
         }
-
         private double Fact(string expressionString, ref int index)
         {
             double number = GetNumber(expressionString, ref index); //todo if number is double - ?????
@@ -120,8 +120,7 @@ namespace Calculator
                 return result;
             }
             return number;
-        }
-       
+        }       
         private double Sqr(string expressionString, ref int index)
         {
             double number = Fact(expressionString,ref index);
@@ -133,7 +132,6 @@ namespace Calculator
             }
             return number;
         }
-
         private double GetNumber(string expressionString, ref int index)
         {
             string result = string.Empty;
@@ -151,7 +149,7 @@ namespace Calculator
         }
 
 
-        private string CulculateSin(string expressionString)
+        private string CalculateSin(string expressionString)
         {
             string resultStringWoSin = String.Copy(expressionString);
 
@@ -165,7 +163,7 @@ namespace Calculator
             return resultStringWoSin;
 
         }
-        private string CulculateCos(string expressionString)
+        private string CalculateCos(string expressionString)
         {
             string resultStringWoSin = String.Copy(expressionString);
 
@@ -179,7 +177,7 @@ namespace Calculator
             return resultStringWoSin;
 
         }
-        private string CulculateTg(string expressionString)
+        private string CalculateTg(string expressionString)
         {
             string resultStringWoSin = String.Copy(expressionString);
 
@@ -189,6 +187,32 @@ namespace Calculator
                 double value = GetNumber(expressionString, ref index);
                 double result = Math.Tan(value * Math.PI / 180);
                 resultStringWoSin = resultStringWoSin.Replace("tg" + value.ToString(), result.ToString());
+            }
+            return resultStringWoSin;
+        }
+        private string CalculateLg(string expressionString)
+        {
+            string resultStringWoSin = String.Copy(expressionString);
+
+            while (resultStringWoSin.Contains("lg"))
+            {
+                int index = expressionString.IndexOf("lg") + 2;
+                double value = GetNumber(expressionString, ref index);
+                double result = Math.Log10(value);
+                resultStringWoSin = resultStringWoSin.Replace("lg" + value.ToString(), result.ToString());
+            }
+            return resultStringWoSin;
+        }
+        private string CalculateLn(string expressionString)
+        {
+            string resultStringWoSin = String.Copy(expressionString);
+
+            while (resultStringWoSin.Contains("ln"))
+            {
+                int index = expressionString.IndexOf("ln") + 2;
+                double value = GetNumber(expressionString, ref index);
+                double result = Math.Log(value);
+                resultStringWoSin = resultStringWoSin.Replace("ln" + value.ToString(), result.ToString());
             }
             return resultStringWoSin;
         }
@@ -247,6 +271,16 @@ namespace Calculator
                         continue;
                     }
                     if (inputString[i] == 'p' && inputString[i + 1] == 'i')
+                    {
+                        i += 2;
+                        continue;
+                    }
+                    if (inputString[i] == 'l' && inputString[i + 1] == 'g')
+                    {
+                        i += 2;
+                        continue;
+                    }
+                    if (inputString[i] == 'l' && inputString[i + 1] == 'n')
                     {
                         i += 2;
                         continue;
