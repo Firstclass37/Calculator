@@ -36,7 +36,12 @@ namespace Calculator
 
         private static  bool CheckCommand(string inputString)
         {
-            if (inputString == "-c") { Console.Clear();ShowHelp(); return true; }
+            if (inputString == "-c")
+            {
+                Console.Clear();
+                ShowHelp();
+                return true;
+            }
             return false;
         }
 
