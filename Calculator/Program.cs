@@ -48,7 +48,7 @@ namespace Calculator
         private static void ShowHelp()
         {
             Console.WriteLine(@"
-Operations: PI - + / * ^ !  lg(<value>)  ln(<value>)  sin(<Value>) cos(<Value>) tg(<value>)           
+Operations: e PI - + / * ^ !  lg(<value>)  ln(<value>)  sin(<Value>) cos(<Value>) tg(<value>)  exp(<value>)          
                                ");
 
         }

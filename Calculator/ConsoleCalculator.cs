@@ -15,7 +15,7 @@ namespace Calculator
 
         public bool TryCalculate(string inputString, out double result)
         {
-            string expressionString = inputString.Replace(".", ",").ToLower().Replace("pi",Math.PI.ToString()).Replace(" ",String.Empty);
+            string expressionString = inputString.Replace(".", ",").ToLower().Replace("pi",Math.PI.ToString()).Replace("e",Math.E.ToString()).Replace(" ",String.Empty);
             result = 0;
             if ( !CheckBrackets(expressionString) || CheckUnacceptableSymbols(expressionString) || !CheckEexpressionСorrectness(expressionString)) return false;
             result = Calculate(expressionString);
@@ -35,6 +35,7 @@ namespace Calculator
             if (expressionString.Contains("tg")) modifiedExpressionString = CalculateTg(modifiedExpressionString);
             if (expressionString.Contains("lg")) modifiedExpressionString = CalculateLg(modifiedExpressionString);
             if (expressionString.Contains("ln")) modifiedExpressionString = CalculateLn(modifiedExpressionString);
+            if (expressionString.Contains("exp")) modifiedExpressionString = CalculateExp(modifiedExpressionString);
             modifiedExpressionString = CalculeteSmallExpression(modifiedExpressionString);
            
             return  double.Parse(modifiedExpressionString);
@@ -216,6 +217,19 @@ namespace Calculator
             }
             return resultStringWoSin;
         }
+        private string CalculateExp(string expressionString)
+        {
+            string resultStringWoSin = String.Copy(expressionString);
+
+            while (resultStringWoSin.Contains("exp"))
+            {
+                int index = expressionString.IndexOf("exp") + 3;
+                double value = GetNumber(expressionString, ref index);
+                double result = Math.Exp(value);
+                resultStringWoSin = resultStringWoSin.Replace("exp" + value.ToString(), result.ToString());
+            }
+            return resultStringWoSin;
+        }
 
         private int GetRightBraketIndex(string expressionString, int leftBraketIndex)
         {
@@ -249,7 +263,7 @@ namespace Calculator
 
         private bool CheckUnacceptableSymbols(string inputString)
         {
-            string unacceptableSymbols = "qwertyuiop[]';lkjhgfdsazxcvbm?=_%$#'&йцукенгшщзхждлорпавыфячсмитьбю№";
+            string unacceptableSymbols = "qwrtyuiop[]';lkjhgfdsazxcvbm?=_%$#'&йцукенгшщзхждлорпавыфячсмитьбю№";
 
             for (int i = 0; i < inputString.Length; i++)
             {
@@ -283,6 +297,11 @@ namespace Calculator
                     if (inputString[i] == 'l' && inputString[i + 1] == 'n')
                     {
                         i += 2;
+                        continue;
+                    }
+                    if (inputString[i] == 'e' && inputString[i + 1] == 'x' && inputString[i + 2] == 'p')
+                    {
+                        i += 3;
                         continue;
                     }
                     ErrorMessage = "UnacceptableSymbols";
