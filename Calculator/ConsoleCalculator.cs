@@ -15,7 +15,7 @@ namespace Calculator
 
         public bool TryCalculate(string inputString, out double result)
         {
-            string expressionString = inputString.Replace(".", ",").ToLower().Replace("pi",Math.PI.ToString()).Replace("e",Math.E.ToString()).Replace(" ",String.Empty);
+            string expressionString = inputString.Replace(".", ",").Replace("pi",Math.PI.ToString()).Replace("E",Math.E.ToString()).Replace(" ",String.Empty).ToLower();
             result = 0;
             if ( !CheckBrackets(expressionString) || CheckUnacceptableSymbols(expressionString) || !CheckEexpressionСorrectness(expressionString)) return false;
             result = Calculate(expressionString);
@@ -30,12 +30,7 @@ namespace Calculator
             if (operations.Contains(expressionString[0].ToString())) modifiedExpressionString = previousResult.ToString() + expressionString;
           
             modifiedExpressionString = CulculateBrackets(modifiedExpressionString);
-            if (expressionString.Contains("sin")) modifiedExpressionString = CalculateSin(modifiedExpressionString);
-            if (expressionString.Contains("cos")) modifiedExpressionString = CalculateCos(modifiedExpressionString);
-            if (expressionString.Contains("tg")) modifiedExpressionString = CalculateTg(modifiedExpressionString);
-            if (expressionString.Contains("lg")) modifiedExpressionString = CalculateLg(modifiedExpressionString);
-            if (expressionString.Contains("ln")) modifiedExpressionString = CalculateLn(modifiedExpressionString);
-            if (expressionString.Contains("exp")) modifiedExpressionString = CalculateExp(modifiedExpressionString);
+            modifiedExpressionString = CalculateTrigonometricFunctions(modifiedExpressionString);
             modifiedExpressionString = CalculeteSmallExpression(modifiedExpressionString);
            
             return  double.Parse(modifiedExpressionString);
@@ -44,13 +39,14 @@ namespace Calculator
 
         private string CulculateBrackets(string expressionString)
         {
-            string result = string.Copy(expressionString);
+            string result = string.Copy(expressionString);            
             while (result.Contains("("))
             {
                 int leftBrecketPos = result.LastIndexOf("(");
                 int rightBracketPos = GetRightBraketIndex(result,leftBrecketPos);
                 string smallExpression = result.Substring(leftBrecketPos,rightBracketPos - leftBrecketPos+1);
-                string smallResult = CalculeteSmallExpression(smallExpression.Remove(0,1).Remove(smallExpression.Length-2, 1));
+                string smallResult = CalculateTrigonometricFunctions(smallExpression.Remove(0, 1).Remove(smallExpression.Length - 2, 1));
+                smallResult = CalculeteSmallExpression(smallResult);
                 result = result.Replace(smallExpression,smallResult);
             }
             return result;
@@ -149,7 +145,18 @@ namespace Calculator
 
         }
 
+        private string CalculateTrigonometricFunctions(string expressionString)
+        {
+            string resultString = string.Copy(expressionString);
+            if (expressionString.Contains("sin")) resultString = CalculateSin(resultString);
+            if (expressionString.Contains("cos")) resultString = CalculateCos(resultString);
+            if (expressionString.Contains("tg")) resultString = CalculateTg(resultString);
+            if (expressionString.Contains("lg")) resultString = CalculateLg(resultString);
+            if (expressionString.Contains("ln")) resultString = CalculateLn(resultString);
+            if (expressionString.Contains("exp")) resultString = CalculateExp(resultString);
+            return resultString;
 
+        }
         private string CalculateSin(string expressionString)
         {
             string resultStringWoSin = String.Copy(expressionString);
@@ -263,7 +270,7 @@ namespace Calculator
 
         private bool CheckUnacceptableSymbols(string inputString)
         {
-            string unacceptableSymbols = "qwrtyuiop[]';lkjhgfdsazxcvbm?=_%$#'&йцукенгшщзхждлорпавыфячсмитьбю№";
+            string unacceptableSymbols = "qwrtyeuiop[]';lkjhgfdsazxcvbm?=_%$#'&йцукенгшщзхждлорпавыфячсмитьбю№";
 
             for (int i = 0; i < inputString.Length; i++)
             {
