@@ -15,7 +15,7 @@ namespace Calculator
 
         public bool TryCalculate(string inputString, out double result)
         {
-            string expressionString = inputString.Replace(".", ",").Replace("PI",Math.PI.ToString()).ToLower();
+            string expressionString = inputString.Replace(".", ",").ToLower().Replace("pi",Math.PI.ToString());
             result = 0;
             if ( !CheckBrackets(expressionString) || CheckUnacceptableSymbols(expressionString) || !CheckEexpressionСorrectness(expressionString)) return false;
             result = Calculate(expressionString);
@@ -242,6 +242,11 @@ namespace Calculator
                         continue;
                     }
                     if (inputString[i] == 't' && inputString[i + 1] == 'g')
+                    {
+                        i += 2;
+                        continue;
+                    }
+                    if (inputString[i] == 'p' && inputString[i + 1] == 'i')
                     {
                         i += 2;
                         continue;
