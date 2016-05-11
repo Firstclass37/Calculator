@@ -20,6 +20,7 @@ namespace Calculator
             if ( !CheckBrackets(expressionString) || CheckUnacceptableSymbols(expressionString) || !CheckEexpressionСorrectness(expressionString)) return false;
             result = Calculate(expressionString);
             previousResult = result;
+            History.Add(expressionString + " = " + result.ToString());
             return true;
 
         }
@@ -330,6 +331,7 @@ namespace Calculator
 
             return true;
         }
+
       
     }
 }

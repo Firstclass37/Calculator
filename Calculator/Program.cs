@@ -42,6 +42,16 @@ namespace Calculator
                 ShowHelp();
                 return true;
             }
+            if (inputString == "-h")
+            {
+                ShowHistory();
+                return true;
+            }
+            if (inputString == "-hc")
+            {
+                ClearHistory();
+                return true;
+            }
             return false;
         }
 
@@ -50,9 +60,17 @@ namespace Calculator
             Console.WriteLine(@"
 Operations: E PI - + / * ^ !  lg(<value>)  ln(<value>)  sin(<Value>) cos(<Value>) tg(<value>)  exp(<value>)          
                                ");
-
+        }
+        private static void ShowHistory()
+        {
+            Console.WriteLine(new string('=',15));
+            Console.Write(History.Get());
+            Console.WriteLine(new string('=', 15));
         }
 
-     
+        private static void ClearHistory()
+        {
+            History.Clear();
+        }
     }
 }
