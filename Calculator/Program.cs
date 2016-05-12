@@ -67,7 +67,6 @@ Operations: E PI - + / * ^ !  lg(<value>)  ln(<value>)  sin(<Value>) cos(<Value>
             Console.Write(History.Get());
             Console.WriteLine(new string('=', 15));
         }
-
         private static void ClearHistory()
         {
             History.Clear();

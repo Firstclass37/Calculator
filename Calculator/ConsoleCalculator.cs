@@ -133,8 +133,13 @@ namespace Calculator
         private double GetNumber(string expressionString, ref int index)
         {
             string result = string.Empty;
-            foreach (char c in expressionString.Substring(index))
+            if (expressionString.Substring(index)[0] == '-')
             {
+                index++;
+                result += "-";
+            }
+            foreach (char c in expressionString.Substring(index))
+            {               
                 if (char.IsDigit(c) || c==',')
                 {
                     result += c.ToString();
