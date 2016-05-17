@@ -29,11 +29,18 @@ namespace Calculator
         {
             string modifiedExpressionString = string.Copy(expressionString);
             if (operations.Contains(expressionString[0].ToString())) modifiedExpressionString = previousResult.ToString() + expressionString;
-          
-            modifiedExpressionString = CulculateBrackets(modifiedExpressionString);
-            modifiedExpressionString = CalculateTrigonometricFunctions(modifiedExpressionString);
-            modifiedExpressionString = CalculeteSmallExpression(modifiedExpressionString);
-           
+            try
+            {
+                modifiedExpressionString = CulculateBrackets(modifiedExpressionString);
+                modifiedExpressionString = CalculateTrigonometricFunctions(modifiedExpressionString);
+                modifiedExpressionString = CalculeteSmallExpression(modifiedExpressionString);
+            }
+            catch (DivideByZeroException)
+            {
+                ErrorMessage = "Devide by zero!!!";
+                return 0;
+            }
+
             return  double.Parse(modifiedExpressionString);
 
         }
