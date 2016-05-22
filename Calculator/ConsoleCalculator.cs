@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,20 +67,21 @@ namespace Calculator
             int index = 0;
             double result = MulDiv(expressionString,ref index);
 
-            while (index < expressionString.Length-1)
+            while (index < expressionString.Length)
             {
                 if (expressionString[index] == '+')
                 {
                     index++;
                     result += MulDiv(expressionString, ref index);
-                    break;
+                    continue;
                 }
                 if (expressionString[index] == '-')
                 {
                     index++;
                     result -= MulDiv(expressionString, ref index);
-                    break;
+                    continue;
                 }
+                else break;
 
             }
 
@@ -89,19 +91,19 @@ namespace Calculator
         {
             double result = Sqr(expressionString, ref index);
 
-            while (index < expressionString.Length - 1)
+            while (index < expressionString.Length )
             {
                 if (expressionString[index] == '*')
                 {
                     index++;
                     result *= Sqr(expressionString, ref index);
-                    break;
+                    continue;
                 }
                 else if (expressionString[index] == '/')
                 {
                     index++;
                     result /= Sqr(expressionString, ref index);
-                    break;
+                    continue;
                 }
                 else break;
                 
